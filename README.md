@@ -1,4 +1,4 @@
-## BeIT Memcached is a client for [memcached](http://memcached.org/) written in C# 2.0
+## BeIT Memcached is a client for [memcached](http://memcached.org/) written in C# ~~2.0~~ 4.7 & Standard 2.0
 
 ### The client supports all memcached commands:
   * Set
