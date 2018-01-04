@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using NUnit.Framework;
 
 namespace BeIT.MemCached.IntegrationTests
@@ -51,7 +50,7 @@ namespace BeIT.MemCached.IntegrationTests
         public void TestSet_WhenKeyExists()
         {
             // Arrange
-            (var key, _) = GenerateAndAddKey(_client);
+            (var key, _) = GenerateAndAddKey();
             var newValue = GenerateBytes();
 
             // Act
@@ -85,7 +84,7 @@ namespace BeIT.MemCached.IntegrationTests
         public void TestAdd_WhenKeyExists()
         {
             // Arrange
-            (var key, var existingValue) = GenerateAndAddKey(_client);
+            (var key, var existingValue) = GenerateAndAddKey();
             var newValue = GenerateBytes();
 
             // Act
@@ -119,7 +118,7 @@ namespace BeIT.MemCached.IntegrationTests
         public void TestReplace_WhenKeyExists()
         {
             // Arrange
-            (var key, _) = GenerateAndAddKey(_client);
+            (var key, _) = GenerateAndAddKey();
             var newValue = GenerateBytes();
 
             // Act
@@ -151,7 +150,7 @@ namespace BeIT.MemCached.IntegrationTests
         public void TestGet_WhenKeyExists()
         {
             // Arrange
-            (var key, var value) = GenerateAndAddKey(_client);
+            (var key, var value) = GenerateAndAddKey();
 
             // Act
             var result = _client.Get(key);
@@ -190,8 +189,8 @@ namespace BeIT.MemCached.IntegrationTests
         public void TestGets_WhenAllKeysExist()
         {
             // Arrange
-            (var key1, var value1) = GenerateAndAddKey(_client);
-            (var key2, var value2) = GenerateAndAddKey(_client);
+            (var key1, var value1) = GenerateAndAddKey();
+            (var key2, var value2) = GenerateAndAddKey();
 
             var keys = new[] { key1, key2 };
             var values = new[] { value1, value2 };
@@ -207,9 +206,9 @@ namespace BeIT.MemCached.IntegrationTests
         public void TestGets_WhenSomeKeysExist()
         {
             // Arrange
-            (var key1, var value1) = GenerateAndAddKey(_client);
+            (var key1, var value1) = GenerateAndAddKey();
             var key2 = GenerateKey();
-            (var key3, var value3) = GenerateAndAddKey(_client);
+            (var key3, var value3) = GenerateAndAddKey();
 
             var keys = new[]
             {
@@ -253,7 +252,7 @@ namespace BeIT.MemCached.IntegrationTests
         public void TestDelete_WhenKeyExists()
         {
             // Arrange
-            (var key, _) = GenerateAndAddKey(_client);
+            (var key, _) = GenerateAndAddKey();
 
             // Act
             var result = _client.Delete(key);
@@ -275,12 +274,12 @@ namespace BeIT.MemCached.IntegrationTests
             return Guid.NewGuid().ToByteArray();
         }
 
-        private (string, byte[]) GenerateAndAddKey(MemcachedClient client)
+        private (string, byte[]) GenerateAndAddKey()
         {
             var key = GenerateKey();
             var value = GenerateBytes();
 
-            Assert.IsTrue(client.Add(key, value));
+            Assert.IsTrue(_client.Add(key, value));
 
             return (key, value);
         }
