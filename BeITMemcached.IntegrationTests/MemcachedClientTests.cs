@@ -36,7 +36,7 @@ namespace BeIT.MemCached.IntegrationTests
         {
             // Arrange
             var key = GenerateKey();
-            var value = GenerateBytes();
+            var value = GenerateValue();
 
             // Act
             var result = _client.Set(key, value);
@@ -51,7 +51,7 @@ namespace BeIT.MemCached.IntegrationTests
         {
             // Arrange
             (var key, _) = GenerateAndAddKey();
-            var newValue = GenerateBytes();
+            var newValue = GenerateValue();
 
             // Act
             var result = _client.Set(key, newValue);
@@ -70,7 +70,7 @@ namespace BeIT.MemCached.IntegrationTests
         {
             // Arrange
             var key = GenerateKey();
-            var value = GenerateBytes();
+            var value = GenerateValue();
 
             // Act
             var result = _client.Add(key, value);
@@ -85,7 +85,7 @@ namespace BeIT.MemCached.IntegrationTests
         {
             // Arrange
             (var key, var existingValue) = GenerateAndAddKey();
-            var newValue = GenerateBytes();
+            var newValue = GenerateValue();
 
             // Act
             var result = _client.Add(key, newValue);
@@ -104,7 +104,7 @@ namespace BeIT.MemCached.IntegrationTests
         {
             // Arrange
             var key = GenerateKey();
-            var value = GenerateBytes();
+            var value = GenerateValue();
 
             // Act
             var result = _client.Replace(key, value);
@@ -119,7 +119,7 @@ namespace BeIT.MemCached.IntegrationTests
         {
             // Arrange
             (var key, _) = GenerateAndAddKey();
-            var newValue = GenerateBytes();
+            var newValue = GenerateValue();
 
             // Act
             var result = _client.Replace(key, newValue);
@@ -172,7 +172,7 @@ namespace BeIT.MemCached.IntegrationTests
                 GenerateKey()
             };
 
-            var values = new byte[][]
+            var values = new object[]
             {
                 null,
                 null
@@ -269,15 +269,15 @@ namespace BeIT.MemCached.IntegrationTests
             return $"key_{Guid.NewGuid()}";
         }
 
-        private byte[] GenerateBytes()
+        private object GenerateValue()
         {
             return Guid.NewGuid().ToByteArray();
         }
 
-        private (string, byte[]) GenerateAndAddKey()
+        private (string, object) GenerateAndAddKey()
         {
             var key = GenerateKey();
-            var value = GenerateBytes();
+            var value = GenerateValue();
 
             Assert.IsTrue(_client.Add(key, value));
 
