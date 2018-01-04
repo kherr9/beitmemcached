@@ -94,6 +94,40 @@ namespace BeIT.MemCached.IntegrationTests
 
         #endregion
 
+        #region Replace
+
+        [Test]
+        public void TestReplace_WhenKeyNotExists()
+        {
+            // Arrange
+            var key = GenerateKey();
+            var value = GenerateBytes();
+
+            // Act
+            var result = _client.Replace(key, value);
+
+            // Assert
+            Assert.IsFalse(result);
+            Assert.IsNull(_client.Get(key));
+        }
+
+        [Test]
+        public void TestReplace_WhenKeyExists()
+        {
+            // Arrange
+            (var key, _) = GenerateAndAddKey(_client);
+            var newValue = GenerateBytes();
+
+            // Act
+            var result = _client.Replace(key, newValue);
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(newValue, _client.Get(key), "value should not be replaced");
+        }
+
+        #endregion
+
         private string GenerateKey()
         {
             return $"key_{Guid.NewGuid()}";
