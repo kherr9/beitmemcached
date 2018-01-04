@@ -5,11 +5,10 @@
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{B09B6F90-7AF4-43BE-8C02-E36AB2487A98}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BeITMemcached</RootNamespace>
     <AssemblyName>BeITMemcached</AssemblyName>
-    <StartupObject>BeIT.MemCached.Example</StartupObject>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -65,11 +64,7 @@
     <Compile Include="ClientLibrary\Serializer.cs" />
     <Compile Include="ClientLibrary\ServerPool.cs" />
     <Compile Include="ClientLibrary\SocketPool.cs" />
-    <Compile Include="Example.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
