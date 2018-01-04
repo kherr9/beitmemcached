@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace BeIT.MemCached.IntegrationTests
 {
+    /// <summary>
+    /// docker run -d -p 11211:11211 --name memcached memcached
+    /// </summary>
     public class MemcachedClientTests
     {
         private static readonly string ClientName = nameof(MemcachedClientTests);
@@ -26,7 +30,7 @@ namespace BeIT.MemCached.IntegrationTests
             _client.FlushAll();
         }
 
-        #region Set
+        #region Set(string, object)
 
         [Test]
         public void TestSet_WhenKeyNotExists()
@@ -60,7 +64,7 @@ namespace BeIT.MemCached.IntegrationTests
 
         #endregion
 
-        #region Add
+        #region Add(string, object)
 
         [Test]
         public void TestAdd_WhenKeyNotExists()
@@ -94,7 +98,7 @@ namespace BeIT.MemCached.IntegrationTests
 
         #endregion
 
-        #region Replace
+        #region Replace(string, object)
 
         [Test]
         public void TestReplace_WhenKeyNotExists()
@@ -124,6 +128,139 @@ namespace BeIT.MemCached.IntegrationTests
             // Assert
             Assert.IsTrue(result);
             Assert.AreEqual(newValue, _client.Get(key), "value should not be replaced");
+        }
+
+        #endregion
+
+        #region Get(string)
+
+        [Test]
+        public void TestGet_WhenKeyNotExists()
+        {
+            // Arrange
+            var key = GenerateKey();
+
+            // Act
+            var result = _client.Get(key);
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void TestGet_WhenKeyExists()
+        {
+            // Arrange
+            (var key, var value) = GenerateAndAddKey(_client);
+
+            // Act
+            var result = _client.Get(key);
+
+            Assert.AreEqual(value, result);
+        }
+
+        #endregion
+
+        #region Get(string[])
+
+        [Test]
+        public void TestGets_WhenNoKeysExist()
+        {
+            // Arrange
+            var keys = new[]
+            {
+                GenerateKey(),
+                GenerateKey()
+            };
+
+            var values = new byte[][]
+            {
+                null,
+                null
+            };
+
+            // Act
+            var result = _client.Get(keys);
+
+            // Assert
+            CollectionAssert.AreEqual(values, result);
+        }
+
+        [Test]
+        public void TestGets_WhenAllKeysExist()
+        {
+            // Arrange
+            (var key1, var value1) = GenerateAndAddKey(_client);
+            (var key2, var value2) = GenerateAndAddKey(_client);
+
+            var keys = new[] { key1, key2 };
+            var values = new[] { value1, value2 };
+
+            // Act
+            var result = _client.Get(keys);
+
+            // Assert
+            CollectionAssert.AreEqual(values, result);
+        }
+
+        [Test]
+        public void TestGets_WhenSomeKeysExist()
+        {
+            // Arrange
+            (var key1, var value1) = GenerateAndAddKey(_client);
+            var key2 = GenerateKey();
+            (var key3, var value3) = GenerateAndAddKey(_client);
+
+            var keys = new[]
+            {
+                key1,
+                key2,
+                key3
+            };
+
+            var values = new[]
+            {
+                value1,
+                null,
+                value3
+            };
+
+            // Act
+            var result = _client.Get(keys);
+
+            // Assert
+            CollectionAssert.AreEqual(values, result);
+        }
+
+        #endregion
+
+        #region Delete(string)
+
+        [Test]
+        public void TestDelete_WhenKeyNotExists()
+        {
+            // Arrange
+            var key = GenerateKey();
+
+            // Act
+            var result = _client.Delete(key);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TestDelete_WhenKeyExists()
+        {
+            // Arrange
+            (var key, _) = GenerateAndAddKey(_client);
+
+            // Act
+            var result = _client.Delete(key);
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.IsNull(_client.Get(key));
         }
 
         #endregion
