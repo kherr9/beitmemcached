@@ -32,7 +32,7 @@ namespace BeIT.MemCached.IntegrationTests
         #region Set(string, object)
 
         [Test]
-        public void TestSet_WhenKeyNotExists()
+        public void TestSet_WhenKeyNotExists_SetsValue()
         {
             // Arrange
             var key = GenerateKey();
@@ -47,7 +47,7 @@ namespace BeIT.MemCached.IntegrationTests
         }
 
         [Test]
-        public void TestSet_WhenKeyExists()
+        public void TestSet_WhenKeyExists_ReplacesValue()
         {
             // Arrange
             (var key, _) = GenerateAndAddKey();
@@ -58,7 +58,7 @@ namespace BeIT.MemCached.IntegrationTests
 
             // Assert
             Assert.IsTrue(result);
-            Assert.AreEqual(newValue, _client.Get(key), "should replace value");
+            Assert.AreEqual(newValue, _client.Get(key));
         }
 
         #endregion
@@ -66,7 +66,7 @@ namespace BeIT.MemCached.IntegrationTests
         #region Add(string, object)
 
         [Test]
-        public void TestAdd_WhenKeyNotExists()
+        public void TestAdd_WhenKeyNotExists_AddsValue()
         {
             // Arrange
             var key = GenerateKey();
@@ -81,7 +81,7 @@ namespace BeIT.MemCached.IntegrationTests
         }
 
         [Test]
-        public void TestAdd_WhenKeyExists()
+        public void TestAdd_WhenKeyExists_DoesNotReplaceValue()
         {
             // Arrange
             (var key, var existingValue) = GenerateAndAddKey();
@@ -100,7 +100,7 @@ namespace BeIT.MemCached.IntegrationTests
         #region Replace(string, object)
 
         [Test]
-        public void TestReplace_WhenKeyNotExists()
+        public void TestReplace_WhenKeyNotExists_DoesNotSetValue()
         {
             // Arrange
             var key = GenerateKey();
@@ -115,7 +115,7 @@ namespace BeIT.MemCached.IntegrationTests
         }
 
         [Test]
-        public void TestReplace_WhenKeyExists()
+        public void TestReplace_WhenKeyExists_ReplacesValue()
         {
             // Arrange
             (var key, _) = GenerateAndAddKey();
@@ -134,7 +134,7 @@ namespace BeIT.MemCached.IntegrationTests
         #region Get(string)
 
         [Test]
-        public void TestGet_WhenKeyNotExists()
+        public void TestGet_WhenKeyNotExists_ReturnsNull()
         {
             // Arrange
             var key = GenerateKey();
@@ -147,7 +147,7 @@ namespace BeIT.MemCached.IntegrationTests
         }
 
         [Test]
-        public void TestGet_WhenKeyExists()
+        public void TestGet_WhenKeyExists_ReturnsValue()
         {
             // Arrange
             (var key, var value) = GenerateAndAddKey();
@@ -163,7 +163,7 @@ namespace BeIT.MemCached.IntegrationTests
         #region Get(string[])
 
         [Test]
-        public void TestGets_WhenNoKeysExist()
+        public void TestGets_WhenNoKeysExist_ReturnsArrayOfNulls()
         {
             // Arrange
             var keys = new[]
@@ -186,7 +186,7 @@ namespace BeIT.MemCached.IntegrationTests
         }
 
         [Test]
-        public void TestGets_WhenAllKeysExist()
+        public void TestGets_WhenAllKeysExist_ReturnsValues()
         {
             // Arrange
             (var key1, var value1) = GenerateAndAddKey();
@@ -203,7 +203,7 @@ namespace BeIT.MemCached.IntegrationTests
         }
 
         [Test]
-        public void TestGets_WhenSomeKeysExist()
+        public void TestGets_WhenSomeKeysExist_ReturnsNullsWhereKeyNotExist()
         {
             // Arrange
             (var key1, var value1) = GenerateAndAddKey();
@@ -236,7 +236,7 @@ namespace BeIT.MemCached.IntegrationTests
         #region Delete(string)
 
         [Test]
-        public void TestDelete_WhenKeyNotExists()
+        public void TestDelete_WhenKeyNotExists_ReturnsFalse()
         {
             // Arrange
             var key = GenerateKey();
@@ -249,7 +249,7 @@ namespace BeIT.MemCached.IntegrationTests
         }
 
         [Test]
-        public void TestDelete_WhenKeyExists()
+        public void TestDelete_WhenKeyExists_DeletesKey()
         {
             // Arrange
             (var key, _) = GenerateAndAddKey();
@@ -274,6 +274,10 @@ namespace BeIT.MemCached.IntegrationTests
             return Guid.NewGuid().ToByteArray();
         }
 
+        /// <summary>
+        /// Adds key/value to memcached
+        /// </summary>
+        /// <returns></returns>
         private (string, object) GenerateAndAddKey()
         {
             var key = GenerateKey();
