@@ -92,7 +92,7 @@ namespace BeIT.MemCached.IntegrationTests
 
             // Assert
             Assert.IsFalse(result);
-            Assert.AreEqual(existingValue, _client.Get(key), "value should not be replaced");
+            Assert.AreEqual(existingValue, _client.Get(key));
         }
 
         #endregion
@@ -126,7 +126,7 @@ namespace BeIT.MemCached.IntegrationTests
 
             // Assert
             Assert.IsTrue(result);
-            Assert.AreEqual(newValue, _client.Get(key), "value should not be replaced");
+            Assert.AreEqual(newValue, _client.Get(key));
         }
 
         #endregion
